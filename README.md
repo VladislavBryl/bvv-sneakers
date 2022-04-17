@@ -1,4 +1,7 @@
-Стек технологій:
+# Магазин кросівок "BVV-sneakers"
+
+
+## Стек технологій:
 
 - ReactJS + хуки
 - React Router
@@ -6,3 +9,7 @@
 - SCSS
 - React Context
 - React Skeleton
+
+
+### Титульна сторінка сервісу
+
