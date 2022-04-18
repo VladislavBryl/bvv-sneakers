@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
 import Drawer from './components/Drawer';
@@ -49,15 +49,15 @@ function App() {
         setCartItems((prev) => [...prev, obj]);
         const { data } = await axios.post('https://624db80877abd9e37c7d232b.mockapi.io/cart', obj);
         setCartItems((prev) =>
-          prev.map((item) => {
-            if (item.parentId === data.parentId) {
-              return {
-                ...item,
-                id: data.id,
-              };
-            }
-            return item;
-          }),
+            prev.map((item) => {
+              if (item.parentId === data.parentId) {
+                return {
+                  ...item,
+                  id: data.id,
+                };
+              }
+              return item;
+            }),
         );
       }
     } catch (error) {
@@ -79,12 +79,12 @@ function App() {
   const onAddToFavorite = async (obj) => {
     try {
       if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) {
-        axios.delete(`https://624db80877abd9e37c7d232b.mockapi.io/favorites/${obj.id}`);
+        axios.delete(`https://624db80877abd9e37c7d232b.mockapi.io/favorite/${obj.id}`);
         setFavorites((prev) => prev.filter((item) => Number(item.id) !== Number(obj.id)));
       } else {
         const { data } = await axios.post(
-          'https://624db80877abd9e37c7d232b.mockapi.io/favorites',
-          obj,
+            'https://624db80877abd9e37c7d232b.mockapi.io/favorite',
+            obj,
         );
         setFavorites((prev) => [...prev, data]);
       }
@@ -103,49 +103,52 @@ function App() {
   };
 
   return (
-    <AppContext.Provider
-      value={{
-        items,
-        cartItems,
-        favorites,
-        isItemAdded,
-        onAddToFavorite,
-        onAddToCart,
-        setCartOpened,
-        setCartItems,
-      }}>
-      <div className="wrapper clear">
-        <Drawer
-          items={cartItems}
-          onClose={() => setCartOpened(false)}
-          onRemove={onRemoveItem}
-          opened={cartOpened}
-        />
-
-        <Header onClickCart={() => setCartOpened(true)} />
-
-        <Route path="" exact>
-          <Home
-            items={items}
-            cartItems={cartItems}
-            searchValue={searchValue}
-            setSearchValue={setSearchValue}
-            onChangeSearchInput={onChangeSearchInput}
-            onAddToFavorite={onAddToFavorite}
-            onAddToCart={onAddToCart}
-            isLoading={isLoading}
+      <AppContext.Provider
+          value={{
+            items,
+            cartItems,
+            favorites,
+            isItemAdded,
+            onAddToFavorite,
+            onAddToCart,
+            setCartOpened,
+            setCartItems,
+          }}>
+        <div className="wrapper clear">
+          <Drawer
+              items={cartItems}
+              onClose={() => setCartOpened(false)}
+              onRemove={onRemoveItem}
+              opened={cartOpened}
           />
-        </Route>
 
-        <Route path="favorites" exact>
-          <Favorites />
-        </Route>
+          <Header onClickCart={() => setCartOpened(true)} />
 
-        <Route path="orders" exact>
-          <Orders />
-        </Route>
-      </div>
-    </AppContext.Provider>
+          <Switch>
+            <Route path="/" exact>
+              <Home
+                  items={items}
+                  cartItems={cartItems}
+                  searchValue={searchValue}
+                  setSearchValue={setSearchValue}
+                  onChangeSearchInput={onChangeSearchInput}
+                  onAddToFavorite={onAddToFavorite}
+                  onAddToCart={onAddToCart}
+                  isLoading={isLoading}
+              />
+            </Route>
+
+            <Route path="/favorites" exact>
+              <Favorites />
+            </Route>
+
+            <Route path="/orders" exact>
+              <Orders />
+            </Route>
+          </Switch>
+        </div>
+
+      </AppContext.Provider>
   );
 }
 
