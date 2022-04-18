@@ -53,7 +53,7 @@ function Drawer({ onClose, onRemove, items = [], opened }) {
 
                   <div className="mr-20 flex">
                     <p className="mb-5">{obj.title}</p>
-                    <b>{obj.price} руб.</b>
+                    <b>{obj.price} грн.</b>
                   </div>
                   <img
                     onClick={() => onRemove(obj.id)}
